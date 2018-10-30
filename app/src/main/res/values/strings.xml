@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">PlanB</string>
+    <string name="start_station_name">起始站</string>
+    <string name="end_station_name">终点站</string>
+    <string name="query_ticket_str">开始查找</string>
+    <string name="login_tip">账号登录</string>
+    <string name="login_btn_str">登录</string>
+    <string name="account_type_tip">注：该账号密码即为用户12306账号密码</string>
+    <string name="account_hint">请输入邮箱／手机号</string>
+    <string name="password_hint">请输入密码</string>
+    <string name="station_tip">选择出发地和目的地</string>
+    <string name="date_tip">选择出发时间</string>
+    <string name="title_logo">PlanB 铁 路 方 案 服 务 中 心</string>
+    <string name="positive_string">确定</string>
+    <string name="negative_string">取消</string>
+</resources>

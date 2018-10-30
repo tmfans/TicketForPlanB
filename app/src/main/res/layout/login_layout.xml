@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+
+    <ImageView
+        android:id="@+id/logo"
+        android:src="@drawable/logo"
+        android:layout_centerHorizontal="true"
+        android:layout_width="100dp"
+        android:layout_marginTop="20dp"
+        android:layout_height="100dp" />
+
+
+    <TextView
+        android:id="@+id/logo_title"
+        android:layout_marginTop="5dp"
+        android:text="@string/title_logo"
+        android:layout_below="@id/logo"
+        android:layout_centerHorizontal="true"
+        android:typeface="sans"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/account"
+        android:layout_width="300dp"
+        android:gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logo_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:hint="@string/account_hint" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/account"
+        android:gravity="center_horizontal"
+        android:inputType="textPassword"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:hint="@string/password_hint" />
+
+    <TextView
+        android:id="@+id/account_tip"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:gravity=""
+        android:layout_below="@+id/password"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:text="@string/account_type_tip"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/login_btn"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:textSize="20sp"
+        android:background="@drawable/query_button_shape"
+        android:text="@string/login_btn_str"
+        android:textColor="#ffffff" />
+</RelativeLayout>
