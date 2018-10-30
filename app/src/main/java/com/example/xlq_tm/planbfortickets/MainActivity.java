@@ -11,13 +11,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.xlq_tm.planbfortickets.DataBean.StationsBean;
 import com.example.xlq_tm.planbfortickets.Utils.DataPickerDialogUtils;
 import com.example.xlq_tm.planbfortickets.Utils.GetStationUtils;
 import com.example.xlq_tm.planbfortickets.Utils.GetTrainUtils;
 
 import java.util.Calendar;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -32,6 +30,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         initView();
         setStatusBarColor();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("xlq111","开始获取站名");
+        GetStationUtils.GetStationAndInsert(this); //获取所有站名，并插入数据库
     }
 
     public void setStatusBarColor(){
@@ -55,14 +60,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.search_btn:
-                //GetStationUtils.GetStationMethod();
                 QueryStation();
                 break;
             case R.id.start_station:
-                Intent intent = new Intent(MainActivity.this,SelectStationActivity.class);
-                startActivity(intent);
+                Intent startIntent = new Intent(MainActivity.this,SelectStationActivity.class);
+                startActivity(startIntent);
                 break;
             case R.id.end_station:
+                Intent endIntent = new Intent(MainActivity.this,SelectStationActivity.class);
+                startActivity(endIntent);
                 break;
             case R.id.date_text:
                 DataPickerDialogUtils utils = new DataPickerDialogUtils(this,mDateStr);
