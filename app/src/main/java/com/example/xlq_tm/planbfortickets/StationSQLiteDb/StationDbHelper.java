@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class StationDbHelper extends SQLiteOpenHelper {
 
-    private Context mContext;
     private static final String mDbName = "station.db";
     private static String CREATE_TABLE_STRING = "create table if not exists stations_info(" +
             "id integer primary key AUTOINCREMENT" +
@@ -16,7 +15,6 @@ public class StationDbHelper extends SQLiteOpenHelper {
 
     public StationDbHelper(Context context) {
         super(context,mDbName,null,1);
-        this.mContext = context;
     }
 
     @Override

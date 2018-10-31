@@ -22,9 +22,14 @@ import okhttp3.Response;
 public class GetStationUtils {
 
     private static List<StationsBean> list = new ArrayList<>();
-    private static String ALL_STATIONS_URI = "http://k6b6yq.natappfree.cc/api/queryStationName";
+    private static String ALL_STATIONS_URI = "http://bq8h8n.natappfree.cc/api/queryStationName";
 
     public static void GetStationAndInsert(final Context context){
+        StationInfoDao dao = new StationInfoDao(context);
+        if (dao.searchStationName().size() != 0){
+            Log.d("xlq111","数据表已存在，并且有数据");
+            return;
+        }
         OkHttpClient okHttpClient = new OkHttpClient();
         final Request request = new Request.Builder()
                 .url(ALL_STATIONS_URI)

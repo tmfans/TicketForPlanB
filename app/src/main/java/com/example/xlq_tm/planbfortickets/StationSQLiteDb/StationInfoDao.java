@@ -27,11 +27,35 @@ public class StationInfoDao {
 
     public void insertDataToDb(List<StationsBean> list){
         mDb = mHelper.getReadableDatabase();
-        for (StationsBean bean : list){
-            mDb.execSQL(INSERT_DATA_SQL,new Object[]{null,bean.getStationName(),bean.getStationCode(),bean.getStationSpell()});
+        mDb.beginTransaction();
+        try {
+            for (StationsBean bean : list){
+                mDb.execSQL(INSERT_DATA_SQL,new Object[]{null,bean.getStationName(),bean.getStationCode(),bean.getStationSpell()});
+            }
+            mDb.setTransactionSuccessful();
+        } catch (Exception e){
+            Log.d("xlq111","插入失败");
+        } finally {
+            Log.d("xlq111","插入完成");
+            mDb.endTransaction();
+            mDb.close();
         }
-        Log.d("xlq111","插入完成");
+    }
+
+    public boolean tableIsExist(){
+        mDb = mHelper.getReadableDatabase();
+        boolean result = false;
+        String CHECK_TABLE_IS_EXIST = "select count(*) as c from stations_info  where type ='stationName' and name ='stations_info'";
+        Cursor c = mDb.rawQuery(CHECK_TABLE_IS_EXIST,null);
+        if (c.moveToNext()){
+            int count = c.getInt(0);
+            if (count > 0){
+                result = true;
+            }
+        }
+        c.close();
         mDb.close();
+        return result;
     }
 
     public List<String> searchStationName(){
