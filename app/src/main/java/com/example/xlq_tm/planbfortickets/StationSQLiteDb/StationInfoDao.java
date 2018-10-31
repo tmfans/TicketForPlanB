@@ -6,18 +6,19 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.example.xlq_tm.planbfortickets.DataBean.StationsBean;
+import com.example.xlq_tm.planbfortickets.StationList.SortModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedMap;
 
 public class StationInfoDao {
 
     private Context mContext;
     private StationDbHelper mHelper;
     private SQLiteDatabase mDb;
-    private static String INSERT_DATA_SQL = "insert into stations_info(id,stationName,stationCode,stationSpell) values (?,?,?,?)";
-    private static String SEARCH_STATION_NAME_SQL = "select stationName from stations_info";
-
+    private static String INSERT_DATA_SQL = "insert into stations_info(id,stationName,stationCode,stationSpell,stationFirstSpell) values (?,?,?,?,?)";
+    private static String SEARCH_STATION_NAME_SQL = "select stationName,stationFirstSpell from stations_info order by stationSpell";
 
     public StationInfoDao(Context context){
         this.mContext = context;
@@ -30,41 +31,30 @@ public class StationInfoDao {
         mDb.beginTransaction();
         try {
             for (StationsBean bean : list){
-                mDb.execSQL(INSERT_DATA_SQL,new Object[]{null,bean.getStationName(),bean.getStationCode(),bean.getStationSpell()});
+                mDb.execSQL(INSERT_DATA_SQL,new Object[]{null,
+                        bean.getStationName(),
+                        bean.getStationCode(),
+                        bean.getStationSpell(),
+                        bean.getStationSpell().charAt(0)});
             }
             mDb.setTransactionSuccessful();
         } catch (Exception e){
-            Log.d("xlq111","插入失败");
+            throw e;
         } finally {
-            Log.d("xlq111","插入完成");
             mDb.endTransaction();
             mDb.close();
         }
     }
 
-    public boolean tableIsExist(){
-        mDb = mHelper.getReadableDatabase();
-        boolean result = false;
-        String CHECK_TABLE_IS_EXIST = "select count(*) as c from stations_info  where type ='stationName' and name ='stations_info'";
-        Cursor c = mDb.rawQuery(CHECK_TABLE_IS_EXIST,null);
-        if (c.moveToNext()){
-            int count = c.getInt(0);
-            if (count > 0){
-                result = true;
-            }
-        }
-        c.close();
-        mDb.close();
-        return result;
-    }
-
-    public List<String> searchStationName(){
+    public List<SortModel> searchStationName(){
         mDb = mHelper.getReadableDatabase();
         Cursor c = mDb.rawQuery(SEARCH_STATION_NAME_SQL,null);
-        List<String> mNameData = new ArrayList<>();
+        List<SortModel> mNameData = new ArrayList<>();
         while (c.moveToNext()){
-            String name = c.getString(0);
-            mNameData.add(name);
+            SortModel model = new SortModel();
+            model.setName(c.getString(c.getColumnIndex("stationName")));
+            model.setLetters(c.getString(c.getColumnIndex("stationFirstSpell")));
+            mNameData.add(model);
         }
         c.close();
         mDb.close();

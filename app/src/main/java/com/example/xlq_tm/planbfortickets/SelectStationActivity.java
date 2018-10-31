@@ -33,15 +33,15 @@ import java.util.List;
 public class SelectStationActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
-    private SideBar sideBar;
-    private TextView dialog;
-    private SortAdapter adapter;
+    private SideBar mSideBar;
+    private TextView mDialog;
+    private SortAdapter mAdapter;
     private EditText mClearEditText;
-    private LinearLayoutManager manager;
-    private List<SortModel> SourceDateList;
-    private PinyinComparator pinyinComparator;
+    private LinearLayoutManager mManager;
+    private List<SortModel> mSourceDateList;
+    private PinyinComparator mPinyinComparator;
     private StationInfoDao mDao;
-
+    private TextView mErrorText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,39 +49,40 @@ public class SelectStationActivity extends AppCompatActivity {
         setContentView(R.layout.select_station_layout);
         setStatusBarColor();
 
-        pinyinComparator = new PinyinComparator();
-        sideBar = findViewById(R.id.sideBar);
-        dialog = findViewById(R.id.dialog);
-        sideBar.setTextView(dialog);
+        mErrorText = findViewById(R.id.data_empty_text);
 
-        sideBar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
+        mPinyinComparator = new PinyinComparator();
+        mSideBar = findViewById(R.id.sideBar);
+        mDialog = findViewById(R.id.dialog);
+        mSideBar.setTextView(mDialog);
+
+        mSideBar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
             @Override
             public void onTouchingLetterChanged(String s) {
-                int position = adapter.getPositionForSection(s.charAt(0));
+                int position = mAdapter.getPositionForSection(s.charAt(0));
                 if (position != -1) {
-                    manager.scrollToPositionWithOffset(position, 0);
+                    mManager.scrollToPositionWithOffset(position, 0);
                 }
             }
         });
 
-
-        Log.d("xlq111","开始查找数据并装载");
-        SourceDateList = filledData(getStationName()); // 从数据库中查找数据，并装载到List<SortModel>中
-        Log.d("xlq111","装载完成");
-
-
+        mSourceDateList = getStationName();// 从数据库中查找数据，并装载到List<SortModel>中
+        if (mSourceDateList.size() != 0){
+            mErrorText.setVisibility(View.GONE);
+        } else {
+            mErrorText.setVisibility(View.VISIBLE);
+            mSideBar.setVisibility(View.GONE);
+        }
         mRecyclerView = findViewById(R.id.recyclerView);
-        Collections.sort(SourceDateList, pinyinComparator);
-
-        manager = new LinearLayoutManager(this);
-        manager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(manager);
-        adapter = new SortAdapter(this, SourceDateList);
-        mRecyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new SortAdapter.OnItemClickListener() {
+        mManager = new LinearLayoutManager(this);
+        mManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(mManager);
+        mAdapter = new SortAdapter(this, mSourceDateList);
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.setOnItemClickListener(new SortAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Toast.makeText(SelectStationActivity.this, ((SortModel) adapter.getItem(position)).getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SelectStationActivity.this, ((SortModel) mAdapter.getItem(position)).getName(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -103,10 +104,9 @@ public class SelectStationActivity extends AppCompatActivity {
         });
     }
 
-    public List<String > getStationName(){
+    public List<SortModel > getStationName(){
         mDao = new StationInfoDao(this);
-        List<String > data = mDao.searchStationName();
-        Log.d("xlq111","查找完成");
+        List<SortModel> data = mDao.searchStationName();
         return data;
     }
 
@@ -114,10 +114,10 @@ public class SelectStationActivity extends AppCompatActivity {
         List<SortModel> filterDateList = new ArrayList<>();
 
         if (TextUtils.isEmpty(filterStr)) {
-            filterDateList = SourceDateList;
+            filterDateList = mSourceDateList;
         } else {
             filterDateList.clear();
-            for (SortModel sortModel : SourceDateList) {
+            for (SortModel sortModel : mSourceDateList) {
                 String name = sortModel.getName();
                 if (name.indexOf(filterStr.toString()) != -1 ||
                         PinyinUtils.getFirstSpell(name).startsWith(filterStr.toString())
@@ -131,31 +131,8 @@ public class SelectStationActivity extends AppCompatActivity {
         }
 
         // 根据a-z进行排序
-        Collections.sort(filterDateList, pinyinComparator);
-        adapter.updateList(filterDateList);
-    }
-
-    private List<SortModel> filledData(List<String > data) {
-        List<SortModel> mSortList = new ArrayList<>();
-
-        for (int i = 0; i < data.size(); i++) {
-            SortModel sortModel = new SortModel();
-            sortModel.setName(data.get(i));
-            //汉字转换成拼音
-            String pinyin = PinyinUtils.getPingYin(data.get(i));
-            String sortString = pinyin.substring(0, 1).toUpperCase();
-
-            // 正则表达式，判断首字母是否是英文字母
-            if (sortString.matches("[A-Z]")) {
-                sortModel.setLetters(sortString.toUpperCase());
-            } else {
-                sortModel.setLetters("#");
-            }
-
-            mSortList.add(sortModel);
-        }
-        return mSortList;
-
+        Collections.sort(filterDateList, mPinyinComparator);
+        mAdapter.updateList(filterDateList);
     }
 
     public void setStatusBarColor(){

@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("xlq111","开始获取站名");
         GetStationUtils.GetStationAndInsert(this); //获取所有站名，并插入数据库
     }
 

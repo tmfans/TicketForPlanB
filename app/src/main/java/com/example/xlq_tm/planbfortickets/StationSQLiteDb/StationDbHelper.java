@@ -3,6 +3,7 @@ package com.example.xlq_tm.planbfortickets.StationSQLiteDb;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class StationDbHelper extends SQLiteOpenHelper {
 
@@ -11,7 +12,8 @@ public class StationDbHelper extends SQLiteOpenHelper {
             "id integer primary key AUTOINCREMENT" +
             ",stationName varchar(255)" +
             ",stationCode varchar(20)" +
-            ",stationSpell varChar(255))";
+            ",stationSpell varChar(255)" +
+            ",stationFirstSpell varChar(20))";
 
     public StationDbHelper(Context context) {
         super(context,mDbName,null,1);

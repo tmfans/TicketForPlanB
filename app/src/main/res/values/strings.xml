@@ -13,4 +13,5 @@
     <string name="title_logo">PlanB 铁 路 方 案 服 务 中 心</string>
     <string name="positive_string">确定</string>
     <string name="negative_string">取消</string>
+    <string name="get_station_error">无法获取数据，请检查网络</string>
 </resources>
