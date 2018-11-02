@@ -60,7 +60,7 @@ public class SortAdapter extends RecyclerView.Adapter<SortAdapter.ViewHolder> {
         holder.tvName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, mData.get(position).getName(),Toast.LENGTH_SHORT).show();
+                mOnItemClickListener.onItemClick(holder.itemView, position);//调用自己定义的接口，接口的实现在activity中
             }
         });
     }

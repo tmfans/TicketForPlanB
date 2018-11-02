@@ -1,5 +1,6 @@
 package com.example.xlq_tm.planbfortickets;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -42,6 +43,8 @@ public class SelectStationActivity extends AppCompatActivity {
     private PinyinComparator mPinyinComparator;
     private StationInfoDao mDao;
     private TextView mErrorText;
+    private String mRequestStr;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +53,9 @@ public class SelectStationActivity extends AppCompatActivity {
         setStatusBarColor();
 
         mErrorText = findViewById(R.id.data_empty_text);
+
+        Bundle bundle = getIntent().getExtras();
+        mRequestStr = bundle.getString("id");
 
         mPinyinComparator = new PinyinComparator();
         mSideBar = findViewById(R.id.sideBar);
@@ -67,7 +73,7 @@ public class SelectStationActivity extends AppCompatActivity {
         });
 
         mSourceDateList = getStationName();// 从数据库中查找数据，并装载到List<SortModel>中
-        if (mSourceDateList.size() != 0){
+        if (mSourceDateList.size() != 0) {
             mErrorText.setVisibility(View.GONE);
         } else {
             mErrorText.setVisibility(View.VISIBLE);
@@ -82,7 +88,14 @@ public class SelectStationActivity extends AppCompatActivity {
         mAdapter.setOnItemClickListener(new SortAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Toast.makeText(SelectStationActivity.this, ((SortModel) mAdapter.getItem(position)).getName(), Toast.LENGTH_SHORT).show();
+                Intent intent = getIntent();
+                intent.putExtra("name", ((SortModel) mAdapter.getItem(position)).getName());
+                if ("start".equals(mRequestStr)) {
+                    setResult(9, getIntent());
+                } else {
+                    setResult(8, getIntent());
+                }
+                finish();
             }
         });
 
@@ -95,16 +108,18 @@ public class SelectStationActivity extends AppCompatActivity {
                 //当输入框里面的值为空，更新为原来的列表，否则为过滤数据列表
                 filterData(s.toString());
             }
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
+
             @Override
             public void afterTextChanged(Editable s) {
             }
         });
     }
 
-    public List<SortModel > getStationName(){
+    public List<SortModel> getStationName() {
         mDao = new StationInfoDao(this);
         List<SortModel> data = mDao.searchStationName();
         return data;
@@ -135,11 +150,11 @@ public class SelectStationActivity extends AppCompatActivity {
         mAdapter.updateList(filterDateList);
     }
 
-    public void setStatusBarColor(){
+    public void setStatusBarColor() {
         ActionBar actionBar = getSupportActionBar();
         ActionBar.LayoutParams lp = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
                 ActionBar.LayoutParams.MATCH_PARENT, Gravity.CENTER);
-        View v = LayoutInflater.from(this).inflate(R.layout.select_action_bar_layout,null);
+        View v = LayoutInflater.from(this).inflate(R.layout.select_action_bar_layout, null);
         actionBar.setCustomView(v,lp);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -161,7 +176,6 @@ public class SelectStationActivity extends AppCompatActivity {
                 finish();
                 break;
 
-                
             default:
                 break;
         }

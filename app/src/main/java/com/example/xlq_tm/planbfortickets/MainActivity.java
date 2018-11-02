@@ -17,7 +17,7 @@ import com.example.xlq_tm.planbfortickets.Utils.GetTrainUtils;
 
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView mStartStation;
     private TextView mEndStation;
@@ -38,17 +38,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         GetStationUtils.GetStationAndInsert(this); //获取所有站名，并插入数据库
     }
 
-    public void setStatusBarColor(){
+    public void setStatusBarColor() {
         View decorView = getWindow().getDecorView();
         int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
         decorView.setSystemUiVisibility(option);
-        getWindow().setStatusBarColor(getResources().getColor(R.color.statusBarColor,null));
+        getWindow().setStatusBarColor(getResources().getColor(R.color.statusBarColor, null));
         ActionBar actionBar = getSupportActionBar();
         ActionBar.LayoutParams lp = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
                 ActionBar.LayoutParams.MATCH_PARENT, Gravity.CENTER);
-        View v = LayoutInflater.from(this).inflate(R.layout.action_bar_layout,null);
-        actionBar.setCustomView(v,lp);
+        View v = LayoutInflater.from(this).inflate(R.layout.action_bar_layout, null);
+        actionBar.setCustomView(v, lp);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setDisplayShowTitleEnabled(false);
@@ -57,26 +57,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.search_btn:
                 QueryStation();
                 break;
             case R.id.start_station:
-                Intent startIntent = new Intent(MainActivity.this,SelectStationActivity.class);
-                startActivity(startIntent);
+                Intent startIntent = new Intent(MainActivity.this, SelectStationActivity.class);
+                startIntent.putExtra("id", "start");
+                startActivityForResult(startIntent, 0);
                 break;
             case R.id.end_station:
-                Intent endIntent = new Intent(MainActivity.this,SelectStationActivity.class);
-                startActivity(endIntent);
+                Intent endIntent = new Intent(MainActivity.this, SelectStationActivity.class);
+                endIntent.putExtra("id", "end");
+                startActivityForResult(endIntent, 1);
                 break;
             case R.id.date_text:
-                DataPickerDialogUtils utils = new DataPickerDialogUtils(this,mDateStr);
+                DataPickerDialogUtils utils = new DataPickerDialogUtils(this, mDateStr);
                 utils.showDataPickerDialog();
         }
 
     }
 
-    public void initView(){
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null) {
+            Bundle bundle = data.getExtras();
+            String name = bundle.getString("name");
+            if (resultCode == 9) {
+                mStartStation.setText(name);
+            } else {
+                mEndStation.setText(name);
+            }
+        }
+    }
+
+    public void initView() {
         mStartStation = findViewById(R.id.start_station);
         mEndStation = findViewById(R.id.end_station);
         mQueryBtn = findViewById(R.id.search_btn);
@@ -91,11 +107,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mDateStr.setOnClickListener(this);
     }
 
-    public void QueryStation(){
+    public void QueryStation() {
         String startStation = mStartStation.getText().toString();
         String endStation = mEndStation.getText().toString();
         String startDate = mDateStr.getText().toString();
-
         GetTrainUtils.request(startDate,startStation,endStation,"ADULT");
     }
 

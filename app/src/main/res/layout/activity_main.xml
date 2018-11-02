@@ -104,12 +104,12 @@
 
         <TextView
             android:id="@+id/start_station"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_weight="1"
             android:text="深圳北"
             android:textStyle="bold"
             android:gravity="center"
-            android:textSize="27sp"
+            android:textSize="25sp"
             android:layout_height="match_parent" />
         <ImageView
             android:layout_width="wrap_content"
@@ -118,9 +118,9 @@
             android:layout_height="match_parent" />
         <TextView
             android:id="@+id/end_station"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_weight="1"
-            android:textSize="27sp"
+            android:textSize="25sp"
             android:textStyle="bold"
             android:gravity="center"
             android:text="长沙南"
