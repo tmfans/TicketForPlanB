@@ -20,6 +20,7 @@ public class StationInfoDao {
     private static String INSERT_DATA_SQL = "insert into stations_info(id,stationName,stationCode,stationSpell,stationFirstSpell) values (?,?,?,?,?)";
     private static String SEARCH_STATION_NAME_SQL = "select stationName,stationFirstSpell from stations_info order by stationSpell";
 
+
     public StationInfoDao(Context context){
         this.mContext = context;
         mHelper = new StationDbHelper(mContext);
@@ -44,6 +45,19 @@ public class StationInfoDao {
             mDb.endTransaction();
             mDb.close();
         }
+    }
+
+    public String searchStationCodeFromName(String name){
+        mDb = mHelper.getReadableDatabase();
+        String code = null;
+        String sql = "select stationCode from stations_info where stationName = '" + name + "'";
+        Cursor c = mDb.rawQuery(sql,null);
+        while (c.moveToNext()){
+            code = c.getString(0);
+        }
+        c.close();
+        mDb.close();
+        return code;
     }
 
     public List<SortModel> searchStationName(){

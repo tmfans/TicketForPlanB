@@ -2,6 +2,7 @@ package com.example.xlq_tm.planbfortickets;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -11,23 +12,27 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.xlq_tm.planbfortickets.DataBean.TrainsResult;
+import com.example.xlq_tm.planbfortickets.StationSQLiteDb.StationInfoDao;
 import com.example.xlq_tm.planbfortickets.Utils.DataPickerDialogUtils;
 import com.example.xlq_tm.planbfortickets.Utils.GetStationUtils;
 import com.example.xlq_tm.planbfortickets.Utils.GetTrainUtils;
 
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,GetTrainUtils.listener{
 
     private TextView mStartStation;
     private TextView mEndStation;
     private TextView mDateStr;
     private Button mQueryBtn;
+    private StationInfoDao mDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        GetTrainUtils.setListener(this);
         initView();
         setStatusBarColor();
     }
@@ -99,19 +104,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mDateStr = findViewById(R.id.date_text);
         Calendar calendar = Calendar.getInstance();
         mDateStr.setText(calendar.get(Calendar.YEAR)
-                + "-" + (calendar.get(Calendar.MONTH) + 1)
-                + "-" + calendar.get(Calendar.DATE));
+                + "-" + DataPickerDialogUtils.formatDate(calendar.get(Calendar.MONTH) + 1)
+                + "-" + DataPickerDialogUtils.formatDate(calendar.get(Calendar.DATE)));
         mQueryBtn.setOnClickListener(this);
         mStartStation.setOnClickListener(this);
         mEndStation.setOnClickListener(this);
         mDateStr.setOnClickListener(this);
+        mDao = new StationInfoDao(this);
     }
 
     public void QueryStation() {
-        String startStation = mStartStation.getText().toString();
-        String endStation = mEndStation.getText().toString();
+        String startStation = mDao.searchStationCodeFromName(mStartStation.getText().toString());
+        String endStation = mDao.searchStationCodeFromName(mEndStation.getText().toString());
         String startDate = mDateStr.getText().toString();
         GetTrainUtils.request(startDate,startStation,endStation,"ADULT");
     }
 
+    @Override
+    public void onsuccess(TrainsResult result) {
+        Intent intent = new Intent(this,DisplayTrainActivity.class);
+        intent.putExtra("trainBean",result);
+        Log.d("xlq111","result = " + result.getData());
+        intent.putExtra("title",mStartStation.getText().toString()+" --> "+ mEndStation.getText().toString());
+        startActivity(intent);
+    }
 }

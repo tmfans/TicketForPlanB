@@ -34,6 +34,13 @@ public class DataPickerDialogUtils implements DatePicker.OnDateChangedListener {
                 null);
     }
 
+    public static String formatDate(int date){
+        if (date >= 10)
+            return String.valueOf(date);
+        else
+            return "0" + String.valueOf(date);
+    }
+
     public void showDataPickerDialog() {
         LinearLayout dataPickerLayout = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.data_picker_layout, null);
         mPicker = dataPickerLayout.findViewById(R.id.DataPicker);
@@ -44,7 +51,8 @@ public class DataPickerDialogUtils implements DatePicker.OnDateChangedListener {
                 .setPositiveButton(R.string.positive_string, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mShowDateText.setText(mPicker.getYear() + "-" + (mPicker.getMonth()+ 1 ) + "-" + mPicker.getDayOfMonth());
+
+                mShowDateText.setText(mPicker.getYear() + "-" + formatDate(mPicker.getMonth()+ 1 ) + "-" + formatDate(mPicker.getDayOfMonth()));
                 dialog.dismiss();
             }
         }).setNegativeButton(R.string.negative_string, new DialogInterface.OnClickListener() {
