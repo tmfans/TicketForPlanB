@@ -29,8 +29,8 @@ public class GetTrainUtils {
             @Override
             public void onResponse(Call<TrainsResult<TrainDataBean>> call, Response<TrainsResult<TrainDataBean>> response) {
                 TrainsResult<TrainDataBean> trainsResult = response.body();
-                Log.d("xlq111","map.size = " + trainsResult.getData().getResult().size());
-                mListener.onsuccess(trainsResult);
+                Log.d("xlq111","map.size = " + trainsResult.getData().getResult().length);
+                mListener.onSuccess(trainsResult);
             }
 
             @Override
@@ -48,6 +48,6 @@ public class GetTrainUtils {
     }
 
    public interface listener{
-        void onsuccess(TrainsResult result);
+        void onSuccess(TrainsResult<TrainDataBean> result);
    }
 }

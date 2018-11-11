@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.xlq_tm.planbfortickets.DataBean.TrainDataBean;
 import com.example.xlq_tm.planbfortickets.DataBean.TrainsResult;
 import com.example.xlq_tm.planbfortickets.StationSQLiteDb.StationInfoDao;
 import com.example.xlq_tm.planbfortickets.Utils.DataPickerDialogUtils;
@@ -121,11 +122,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onsuccess(TrainsResult result) {
+    public void onSuccess(TrainsResult<TrainDataBean> result) {
         Intent intent = new Intent(this,DisplayTrainActivity.class);
         intent.putExtra("trainBean",result);
-        Log.d("xlq111","result = " + result.getData());
-        intent.putExtra("title",mStartStation.getText().toString()+" --> "+ mEndStation.getText().toString());
+        intent.putExtra("title",mStartStation.getText().toString()+ " --> " + mEndStation.getText().toString());
         startActivity(intent);
     }
 }

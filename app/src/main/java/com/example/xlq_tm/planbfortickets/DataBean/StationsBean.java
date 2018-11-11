@@ -2,11 +2,8 @@ package com.example.xlq_tm.planbfortickets.DataBean;
 
 public class StationsBean {
 
-
     /**
-     * stationCode : VAP
-     * stationName : 北京北
-     * stationSpell : beijingbei
+     * 用于存储车站信息
      */
 
     private String stationCode;

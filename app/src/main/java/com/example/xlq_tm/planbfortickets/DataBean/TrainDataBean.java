@@ -8,7 +8,7 @@ public class TrainDataBean implements Serializable{
 
     private String flag;
     private Map<String ,String > map;
-    private List<String> result;
+    private String[] result;
 
     public Map<String, String> getMap() {
         return map;
@@ -27,11 +27,11 @@ public class TrainDataBean implements Serializable{
     }
 
 
-    public List<String> getResult() {
+    public String[] getResult() {
         return result;
     }
 
-    public void setResult(List<String> result) {
+    public void setResult(String [] result) {
         this.result = result;
     }
 }

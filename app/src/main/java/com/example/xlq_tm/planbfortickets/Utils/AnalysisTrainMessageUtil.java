@@ -11,16 +11,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AnalysizeTrainMessageUtil {
+public class AnalysisTrainMessageUtil {
 
-    public static List<Map<String,Object>> Analysize(TrainsResult<TrainDataBean> trainsResult){
-        List<Map<String,Object>> cs = new ArrayList<>();
-        Log.d("xlq111","cv = " + trainsResult.getData().getMap());
+    public static List<Map<String,String>> Analysis(TrainsResult<TrainDataBean> trainsResult){
+        List<Map<String,String >> cs = new ArrayList<>();
         Map<String,String> cv = trainsResult.getData().getMap();
 
         for (String s : trainsResult.getData().getResult()){
             String [] cq = s.split("\\|");
-
             Map<String,Object> cw = new HashMap<>();
             cw.put("secretHBStr",cq[36]);
             cw.put("secretStr",cq[0]);
@@ -67,8 +65,8 @@ public class AnalysizeTrainMessageUtil {
             cu.put("from_station_name",cv.get(cq[6]));
             cu.put("to_station_name",cv.get(cq[7]));
 
-            cw.put("queryLeftNewDTO",cu);
-            cs.add(cw);
+            //cw.put("queryLeftNewDTO",cu);
+            cs.add(cu);
         }
         return cs;
     }

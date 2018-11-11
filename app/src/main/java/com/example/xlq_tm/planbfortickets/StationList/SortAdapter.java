@@ -18,12 +18,10 @@ public class SortAdapter extends RecyclerView.Adapter<SortAdapter.ViewHolder> {
 
     private LayoutInflater mInflater;
     private List<SortModel> mData;
-    private Context context;
 
     public SortAdapter(Context context,List<SortModel> mData){
         mInflater = LayoutInflater.from(context);
         this.mData = mData;
-        this.context = context;
     }
 
     @Override
@@ -70,7 +68,7 @@ public class SortAdapter extends RecyclerView.Adapter<SortAdapter.ViewHolder> {
         return mData.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView tvTag,tvName;
 
